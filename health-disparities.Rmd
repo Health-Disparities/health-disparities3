@@ -4,9 +4,33 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(foreign)
 ```
 
-trial
-trial2
-trial3
+```{r}
+download.file("https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DEMO_J.XPT", tf <- tempfile(), mode="wb")
+
+# Create Data Frame From Temporary File
+demo <- foreign::read.xport(tf)
+    
+# save as an R data frame
+# TutorialUser: update the file path here to a directory where you want to save the data frame 
+saveRDS(demo, file="C:\\NHANES\\DATA\\DEMO_J.rds")  
+```
+
+
+
+```{r}
+depression <- read_csv("depression.csv")
+```
+
+# Joining the Datasets
+
+```{r}
+ joined <- 
+  depression %>%
+    left_join(demo, by = ("SEQN"))
+```
+
