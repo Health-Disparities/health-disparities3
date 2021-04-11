@@ -25,10 +25,15 @@ saveRDS(demo, file="C:\\NHANES\\DATA\\DEMO_J.rds")
 ```{r}
 depression <- read_csv("depression.csv")
 ```
+# Calculating Overall Depression Score
 
-
-
-
+```{r}
+depression <- depression %>%
+  rename(q1 = DPQ010, q2 = DPQ020, q3 = DPQ030, q4 = 
+           DPQ040, q5 = DPQ050, q6 = DPQ060, q7 = DPQ070, q8 = DPQ080, q9 = DPQ090) %>%
+  select(SEQN, q1, q2, q3, q4, q5, q6, q7, q8, q9) %>%
+  mutate(dscore = q1 + q2 + q3 + q4 + q5 + q6 + q7+ q8 + q9)
+```
 
 # Joining the Datasets
 
