@@ -26,9 +26,14 @@ saveRDS(demo, file="C:\\NHANES\\DATA\\DEMO_J.rds")
 depression <- read_csv("depression.csv")
 ```
 
+
+
+
+
 # Joining the Datasets
 
 ```{r}
+# merging the two datasets
  joined <- 
   depression %>%
     left_join(demo, by = ("SEQN"))
