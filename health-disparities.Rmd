@@ -9,6 +9,8 @@ library(tidyverse)
 library(foreign)
 ```
 
+# Uploading the Demographic Data
+
 ```{r}
 download.file("https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DEMO_J.XPT", tf <- tempfile(), mode="wb")
 
@@ -19,7 +21,81 @@ demo <- foreign::read.xport(tf)
 # TutorialUser: update the file path here to a directory where you want to save the data frame 
 saveRDS(demo, file="C:\\NHANES\\DATA\\DEMO_J.rds")  
 ```
+# Uploading the RAQ Data
 
+```{r}
+download.file("https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/CDQ_J.XPT", tf <- tempfile(), mode="wb")
+
+# Create Data Frame From Temporary File
+rose <- foreign::read.xport(tf)
+    
+# save as an R data frame
+# TutorialUser: update the file path here to a directory where you want to save the data frame 
+saveRDS(rose, file="C:\\NHANES\\DATA\\CDQ_J.rds")  
+```
+# Identifying Angina
+
+## Grade 2 Angina
+
+```{r}
+rose <- rose %>%
+  rename(q1 = CDQ001, q2 = CDQ002, q3 = CDQ003, q4 = 
+           CDQ004, q5 = CDQ005, q6 = CDQ006, q9A = CDQ009A, q9B = CDQ009B, q9C = CDQ009C, q9D = CDQ009D, q9E = CDQ009E, q9F = CDQ009F, q9G = CDQ009G) %>%
+  select(SEQN, q1, q2, q3, q4, q5, q6, q9D, q9E, q9F, q9G) %>%
+mutate(onetosix = (ifelse(q1 == 1 &
+                            q2 == 1 &
+                            q3 == 1 &
+                            q4 == 1 &
+                            q5 == 1 &
+                            q6 == 1, "yes", "no")))
+rose <- rose %>%
+  mutate(fourorfive = (ifelse(onetosix == "yes" &
+                               q9D == 4 | 
+                               onetosix == "yes" & 
+                               q9E == 5, "yes", "no")))
+
+rose <- rose %>%
+  mutate(sixandseven = (ifelse(onetosix == "yes" &
+                                 q9F == 6 &
+                                 q9G == 7, "yes", "no")))
+
+rose <- rose %>%
+  mutate(grade2 = (ifelse(fourorfive == "yes" |
+                            sixandseven == "yes", 
+                          "yes", "no")))
+```
+
+## Grade 1 Angina
+
+```{r}
+rose <- rose %>%
+  mutate(notthree = (ifelse(q1 == 1 &
+                            q2 == 1 &
+                            q3 != 1 &
+                            q4 == 1 &
+                            q5 == 1 &
+                            q6 == 1, "yes", "no"))) %>%
+  mutate(fourorfive1 = (ifelse(notthree == "yes" &
+                               q9D == 4 | 
+                               notthree == "yes" & 
+                               q9E == 5, "yes", "no"))) %>%
+  mutate(sixandseven1 = (ifelse(notthree == "yes" &
+                                q9F == 6 &
+                                q9G == 7, "yes", "no"))) %>%
+  mutate(grade1 = (ifelse(fourorfive1 == "yes" |
+                            sixandseven1 == "yes", 
+                          "yes", "no")))
+  
+```
+
+# Removing Extraneous Variables in the RAQ Dataset
+
+```{r}
+rose <- rose %>%
+  select(SEQN, grade1, grade2)
+
+rose[is.na(rose)] = "no"
+```
 
 
 ```{r}
@@ -38,9 +114,19 @@ depression <- depression %>%
 # Joining the Datasets
 
 ```{r}
-# merging the two datasets
- joined <- 
+# merging the depression and demographics datasets
+ dreg <- 
   depression %>%
     left_join(demo, by = ("SEQN"))
+```
+
+```{r}
+# merging the cardiovascular (heart) health and demographics datasets
+
+# note that this dataset will only account for people 40 years old and older
+
+hreg <-
+  rose %>%
+  left_join(demo, by = ("SEQN"))
 ```
 
