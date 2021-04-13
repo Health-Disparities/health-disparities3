@@ -21,6 +21,15 @@ demo <- foreign::read.xport(tf)
 # TutorialUser: update the file path here to a directory where you want to save the data frame 
 saveRDS(demo, file="C:\\NHANES\\DATA\\DEMO_J.rds")  
 ```
+## Removing Extraneous Demographic Variables
+
+```{r}
+demo <- demo %>%
+  select(SEQN, RIAGENDR, RIDAGEYR, RIDRETH3, DMDBORN4, DMDCITZN, DMDYRSUS, DMDEDUC3, DMDEDUC2, DMDHHSIZ, INDHHIN2) %>%
+  rename(gender = RIAGENDR, age = RIDAGEYR, raceth = RIDRETH3, birth_country = DMDBORN4, citizen = DMDCITZN, time_us = DMDYRSUS, edu_youth = DMDEDUC3, edu_adult = DMDEDUC2, hh_size = DMDHHSIZ, hh_income = INDHHIN2)
+```
+
+
 # Uploading the RAQ Data
 
 ```{r}
@@ -97,6 +106,7 @@ rose <- rose %>%
 rose[is.na(rose)] = "no"
 ```
 
+# Uploading Depression Screener Data
 
 ```{r}
 depression <- read_csv("depression.csv")
