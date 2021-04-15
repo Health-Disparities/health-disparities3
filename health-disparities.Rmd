@@ -97,7 +97,7 @@ rose <- rose %>%
   
 ```
 
-# Removing Extraneous Variables in the RAQ Dataset
+## Removing Extraneous Variables in the RAQ Dataset
 
 ```{r}
 rose <- rose %>%
@@ -111,7 +111,7 @@ rose[is.na(rose)] = "no"
 ```{r}
 depression <- read_csv("depression.csv")
 ```
-# Calculating Overall Depression Score
+## Calculating Overall Depression Score
 
 ```{r}
 depression <- depression %>%
