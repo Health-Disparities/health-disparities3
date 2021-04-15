@@ -111,6 +111,7 @@ rose[is.na(rose)] = "no"
 ```{r}
 depression <- read_csv("depression.csv")
 ```
+
 ## Calculating Overall Depression Score
 
 ```{r}
@@ -127,7 +128,8 @@ depression <- depression %>%
 # merging the depression and demographics datasets
  dreg <- 
   depression %>%
-    left_join(demo, by = ("SEQN"))
+    left_join(demo, by = ("SEQN")) %>%
+  select(-q1, -q2, -q3, -q4, -q5, -q6, -q7, -q8, -q9)
 ```
 
 ```{r}
