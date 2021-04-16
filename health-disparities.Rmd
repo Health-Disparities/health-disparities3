@@ -131,6 +131,19 @@ depression <- depression %>%
     left_join(demo, by = ("SEQN")) %>%
   select(-q1, -q2, -q3, -q4, -q5, -q6, -q7, -q8, -q9)
 ```
+```{r}
+# making citizen and birth country factors
+```
+
+
+```{r}
+dreg$citizen <- as.factor(dreg$citizen)
+```
+
+
+```{r}
+dreg$birth_country <- as.factor(dreg$birth_country)
+```
 
 ```{r}
 # merging the cardiovascular (heart) health and demographics datasets
@@ -141,4 +154,9 @@ hreg <-
   rose %>%
   left_join(demo, by = ("SEQN"))
 ```
-
+```{r}
+# building model 1
+model <- lm(dscore ~ hh_size, data = dreg)
+model <- lm(dscore ~ hh_size + birth_country, data = dreg)
+summary(model)
+```
