@@ -152,7 +152,13 @@ dreg$raceth <- as.factor(dreg$raceth)
 dreg$edu_youth <- as.factor(dreg$edu_youth)
 dreg$edu_adult <- as.factor(dreg$edu_adult)
 dreg$hh_income <- as.factor(dreg$hh_income) 
-
+hreg$citizen <- as.factor(hreg$citizen)
+hreg$birth_country <- as.factor(hreg$birth_country)
+hreg$gender <- as.factor(hreg$gender)
+hreg$raceth <- as.factor(hreg$raceth)
+hreg$edu_youth <- as.factor(hreg$edu_youth)
+hreg$edu_adult <- as.factor(hreg$edu_adult)
+hreg$hh_income <- as.factor(hreg$hh_income) 
 ```
 
 # Creating Dreg Model
