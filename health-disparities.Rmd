@@ -161,9 +161,31 @@ hreg$edu_adult <- as.factor(hreg$edu_adult)
 hreg$hh_income <- as.factor(hreg$hh_income) 
 ```
 
+# Making Numeric Variables
+
+```{r}
+hreg2 <- hreg %>% 
+  mutate(grade1_num = ifelse(hreg$grade1 == "no", 0,1),
+         grade2_num = ifelse(hreg$grade2 == "no", 0,1),
+         anyangina = ifelse(hreg$grade1 == "yes" |
+                              hreg$grade2 == "yes", 1,0))
+```
+
 # Creating Dreg Model
 
 ```{r}
 # Note: did not bucket dscore because folks said it would make the analysis less robust; something is broken with time_us variable that I could not figure out so i excluded it from model
-model <- lm(dscore ~ hh_size + citizen + birth_country + gender + raceth + edu_adult + hh_income + age, data = dreg)
+depression_model <- lm(dscore ~ hh_size + citizen + birth_country + gender + raceth + edu_adult + hh_income + age, data = dreg)
+summary(depression_model)
+```
+
+# Creating Hreg Models
+
+```{r}
+hearthealth_model1 <- glm(grade1_num ~ hh_size + citizen + birth_country + gender + raceth + edu_adult + hh_income + age, data = hreg2, family = binomial)
+summary(hearthealth_model1)
+hearthealth_model2 <- glm(grade2_num ~ hh_size + citizen + birth_country + gender + raceth + edu_adult + hh_income + age, data = hreg2, family = binomial)
+summary(hearthealth_model2)
+anyangina_model <- glm(anyangina ~ hh_size + citizen + birth_country + gender + raceth + edu_adult + hh_income + age, data = hreg2, family = binomial)
+summary(anyangina_model)
 ```
