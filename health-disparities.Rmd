@@ -7,6 +7,9 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(foreign)
+library(knitr)
+library(tidyr)
+library(broom)
 ```
 
 # Uploading the Demographic Data
@@ -176,16 +179,23 @@ hreg2 <- hreg %>%
 ```{r}
 # Note: did not bucket dscore because folks said it would make the analysis less robust; something is broken with time_us variable that I could not figure out so i excluded it from model
 depression_model <- lm(dscore ~ hh_size + citizen + birth_country + gender + raceth + edu_adult + hh_income + age, data = dreg)
-summary(depression_model)
+
+
+kable(tidy(depression_model, format = "markdown"), digits = 3)
 ```
 
 # Creating Hreg Models
 
 ```{r}
 hearthealth_model1 <- glm(grade1_num ~ hh_size + citizen + birth_country + gender + raceth + edu_adult + hh_income + age, data = hreg2, family = binomial)
-summary(hearthealth_model1)
+
+kable(tidy(hearthealth_model1, format = "markdown"), digits = 3)
+
 hearthealth_model2 <- glm(grade2_num ~ hh_size + citizen + birth_country + gender + raceth + edu_adult + hh_income + age, data = hreg2, family = binomial)
-summary(hearthealth_model2)
+
+kable(tidy(hearthealth_model2, format = "markdown"), digits = 3)
+
 anyangina_model <- glm(anyangina ~ hh_size + citizen + birth_country + gender + raceth + edu_adult + hh_income + age, data = hreg2, family = binomial)
-summary(anyangina_model)
+
+kable(tidy(anyangina_model, format = "markdown"), digits = 3)
 ```
